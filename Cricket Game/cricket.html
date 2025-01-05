@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <style>
+    body{
+        text-align: center;
+    }
+    .choice-img{
+        width: 75px;
+        height: 75px;
+       border-radius: 50%;
+        
+    }
+    .choice-btn{
+        margin-left: 15px;
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+        border: none;
+    }
+   </style>
+    <title>Cricket Game</title>
+</head>
+<body>
+    <h1>Bat Ball Stump Game</h1>
+     
+    <button class="choice-btn"  onclick="
+    let computerChoice = genrateComputerChoice();
+    let resultMsg = getResult('Bat', computerChoice);
+    showResult('Bat', computerChoice,resultMsg)
+    ">
+    <img src="img/bat.png" alt="Bat Img" class="choice-img"></button>
+
+
+    <button class="choice-btn"  onclick="
+     computerChoice = genrateComputerChoice();
+     resultMsg = getResult('Ball', computerChoice);
+     showResult('Ball', computerChoice,resultMsg)
+    "> 
+    <img src="img/ball.png" alt="Ball Img" class="choice-img"></button>
+
+
+    <button class="choice-btn"  onclick="
+    computerChoice =  genrateComputerChoice();
+    resultMsg = getResult('Stump', computerChoice);
+    showResult('Stump', computerChoice,resultMsg);
+    ">
+     <img src="img/stump.png" alt="Stump Img" class="choice-img"></button>
+
+    <h3 id="user-move"></h3>
+    <h3 id="computer-move"></h3>
+    <h3 id="result"></h3>
+    <h3 id="score"></h3>
+
+    <button onclick="localStorage.clear();
+     resetScore();
+    ">Reset</button>
+
+    <script>
+    let scoreStr = localStorage.getItem('Score');
+    let score;
+    resetScore(scoreStr);
+
+    function resetScore(scoreStr){
+      score = scoreStr ? JSON.parse(scoreStr) : {
+        win:0,
+        lost:0,
+        tie:0, 
+      };
+
+      score.displayScore = function(){
+              return ` Win: ${score.win},  Lost: ${score.lost},  Tie: ${score.tie} `;
+            };
+       showResult();
+    }          
+
+    function genrateComputerChoice(){
+        let randomNo = Math.round(Math.random() * 3);
+        if(randomNo > 0 && randomNo <= 1){
+            return 'Bat';
+        }
+        else if(randomNo <= 2){
+            return 'Ball';
+        }
+        else{
+            return 'Stump';
+        }  
+      }
+
+
+      
+    function getResult(userChoice, computerChoice){
+
+        if(userChoice === computerChoice){
+            score.tie++;
+            return `It's a tie`;
+        }
+        else if(userChoice === 'Bat' && computerChoice === 'Ball'){
+            score.win++;
+            return 'User Won';
+        }
+        else if(userChoice === 'Ball' && computerChoice === 'Stump'){
+            score.win++;
+            return 'User Won';
+        }
+        else if(userChoice === 'Stump' && computerChoice === 'Bat'){
+            score.win++;
+            return 'User Won';
+        }
+        else{
+            score.lost++;
+            return 'Computer Won';
+        }
+    }
+
+    function showResult(userChoice, computerChoice,result)
+    {
+        localStorage.setItem('Score',JSON.stringify(score));
+
+        document.querySelector('#user-move').innerText = userChoice  ? `You have chosen ${userChoice}`: '';
+
+        document.querySelector('#computer-move').innerText = computerChoice  ? `computer choice is ${computerChoice}`:'';
+        document.querySelector('#result').innerText = result || '';
+        document.querySelector('#score').innerText = `${score.displayScore()}`;
+
+       
+
+    } 
+    
+
+    </script>
+</body>
+</html>
